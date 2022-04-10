@@ -22,14 +22,15 @@ def main(
         os.makedirs(outputDirectory)
 
     capture = cv2.VideoCapture(cameraID)
+    if image_sizeHW is not None:
+        capture.set(cv2.CAP_PROP_FRAME_HEIGHT, image_sizeHW[0])
+        capture.set(cv2.CAP_PROP_FRAME_WIDTH, image_sizeHW[1])
+
     number_of_captures = 0
     start = timer()
     while True:
         ret_val, image = capture.read()
         if ret_val == True:
-
-            if image_sizeHW is not None:
-                image = cv2.resize(image, (image_sizeHW[1], image_sizeHW[0]))
 
             if preprocessing is not None:
                 if preprocessing == 'grayscale':
@@ -40,11 +41,9 @@ def main(
                 elif preprocessing == 'laplacian':
                     image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
                     image = cv2.Laplacian(image, ddepth=cv2.CV_8U, delta=128)
-                    #image = cv2.blur(image, (3, 3))
                 else:
                     raise NotImplementedError(
                         "display.main(): Not implemented preprocessing '{}'".format(preprocessing))
-            # image.shape = (H, W, C)
 
             # Display the image
             cv2.imshow('image', image)
@@ -57,7 +56,7 @@ def main(
                 logging.info("rate = {} fps".format(fps))
                 start = timer()
                 number_of_captures = 0
-        #if cv2.waitKey(1) & 0xFF == ord('q'):
+
         key = cv2.waitKey(1) & 0xFF
         if key == ord('q'):
             break
