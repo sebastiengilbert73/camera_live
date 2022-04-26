@@ -62,7 +62,7 @@ def main(
             break
         elif key == ord('s'):  # Save the image
             dateTime_obj = datetime.now()
-            timestamp = dateTime_obj.strftime("%Y%m%d-%H:%M:%S")
+            timestamp = dateTime_obj.strftime("%Y%m%d-%Hh%Mm%Ss")
             image_filepath = os.path.join(outputDirectory, timestamp) + ".png"
             logging.info(f"Saving {image_filepath}")
             cv2.imwrite(image_filepath, image)
